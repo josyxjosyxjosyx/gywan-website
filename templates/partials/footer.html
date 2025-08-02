@@ -1,0 +1,91 @@
+{% load static %}
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Footer Main Content -->
+        <div class="footer-content">
+            <!-- Organization Info -->
+            <div class="footer-section footer-brand">
+                <div class="footer-logo">
+    <img src="{% static 'images/gywan-logo.png' %}" alt="GYWAN Logo">
+</div>
+
+                <p class="footer-description">Empowering girls and young women to become confident leaders and changemakers through advocacy, education, and community engagement.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Facebook" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Twitter" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" title="Instagram" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" title="LinkedIn" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link" title="YouTube" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'about' %}#mvv-section">Mission & Vision</a></li>
+                    <li><a href="{% url 'about' %}#team-section">Our Team</a></li>
+                    <li><a href="{% url 'blog' %}">Blog & News</a></li>
+                </ul>
+            </div>
+            
+            <!-- Programs & Impact -->
+            <div class="footer-section">
+                <h4>Programs & Impact</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'events' %}">Events</a></li>
+                    <li><a href="{% url 'resources' %}">Resources & Tools</a></li>
+                    <li><a href="{% url 'about' %}#impact-stats-section">Our Impact</a></li>
+                    <li><a href="{% url 'stories' %}">Success Stories</a></li>
+                </ul>
+            </div>
+            
+            <!-- Support & Contact -->
+            <div class="footer-section">
+                <h4>Support & Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'donate' %}">Make a Donation</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="footer-section footer-newsletter">
+                <h4>Stay Connected</h4>
+                <p>Subscribe to our newsletter for updates on our programs, impact stories, and opportunities to get involved.</p>
+                <form class="newsletter-form" id="newsletter-form">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="email" name="email" placeholder="Enter your email address" required>
+                        <button type="submit" class="newsletter-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="form-note">
+                        <small>We respect your privacy. Unsubscribe at any time.</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div class="footer-copyright">
+                <p>&copy; {{ "now"|date:"Y" }} Girls and Young Women's Advocacy Network (GYWAN). All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

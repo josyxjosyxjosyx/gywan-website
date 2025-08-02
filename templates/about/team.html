@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Team - GYWAN{% endblock %}
+
+{% block content %}
+<!-- Hero Section with background image and blur -->
+<section class="team-hero-section">
+    <div class="container hero-content">
+        <h1 class="page-title fade-in">Our Team</h1>
+        <p class="page-subtitle fade-in">Meet the passionate people behind GYWAN's mission</p>
+    </div>
+</section>
+
+<!-- Team Members -->
+<section class="our-team-section" data-aos="fade-up">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title fade-in">Our Team</h2>
+            <p class="section-subtitle fade-in">We are a diverse, dedicated group working to empower girls and young women globally.</p>
+        </div>
+        <div class="team-grid">
+            {% for member in team_members %}
+            <div class="team-member-card" data-aos="fade-up" data-member-id="member-{{ member.id }}">
+                <div class="team-img-wrap">
+                    {% if member.image %}
+                        <img src="{{ member.image.url }}" alt="{{ member.name }}" class="team-img">
+                    {% else %}
+                        <img src="{% static 'images/placeholder-user.jpg' %}" alt="{{ member.name }}" class="team-img">
+                    {% endif %}
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">{{ member.name }}</h3>
+                    <span class="team-role">{{ member.role }}</span>
+                    <div class="team-social">
+                    </div>
+                    <button class="btn read-bio-btn" data-bio-id="bio-{{ member.id }}">Read Bio</button>
+                    <!-- Hidden bio content for overlay -->
+                    <div class="member-bio-data" id="bio-{{ member.id }}" aria-hidden="true" data-name="{{ member.name }}" data-role="{{ member.role }}" data-bio="{{ member.bio|escapejs }}" 
+                         {% if member.image %} data-image="{{ member.image.url }}"{% else %} data-image="{% static 'images/placeholder-user.jpg' %}"{% endif %} 
+                         {% if member.twitter %} data-twitter="{{ member.twitter }}"{% endif %}
+                         {% if member.instagram %} data-instagram="{{ member.instagram }}"{% endif %}
+                         {% if member.facebook %} data-facebook="{{ member.facebook }}"{% endif %}
+                         {% if member.linkedin %} data-linkedin="{{ member.linkedin }}"{% endif %}>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Supporters -->
+<section class="team-support-section" data-aos="fade-up">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title fade-in">Staff & Supporters</h2>
+            <p class="section-subtitle fade-in">Our work is made possible by a dedicated team of staff and supporters.</p>
+        </div>
+        <div class="supporters-grid">
+            {% for supporter in supporters %}
+            <div class="supporter-card" data-aos="fade-up">
+                <div class="supporter-img-wrap">
+                    {% if supporter.image %}
+                        <img src="{{ supporter.image.url }}" alt="{{ supporter.name }}" class="supporter-img">
+                    {% else %}
+                        <img src="{% static 'images/placeholder-user.jpg' %}" alt="{{ supporter.name }}" class="supporter-img">
+                    {% endif %}
+                </div>
+                <div class="supporter-info">
+                    <h3 class="supporter-name">{{ supporter.name }}</h3>
+                    <span class="supporter-role">{{ supporter.role }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Bio Overlay Drawer -->
+<div id="bio-overlay" class="bio-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="bio-backdrop" tabindex="-1"></div>
+    <div class="bio-panel" role="document" aria-label="Team member biography">
+        <button class="bio-close" aria-label="Close biography">&times;</button>
+        <div class="bio-content">
+            <div class="bio-image-wrapper">
+                <img src="" alt="" class="bio-image">
+            </div>
+            <div class="bio-text">
+                <h2 class="bio-name"></h2>
+                <p class="bio-role"></p>
+                <div class="bio-social">
+                    <!-- injected -->
+                </div>
+                <div class="bio-description"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero */
+.team-hero-section {
+    position: relative;
+    padding: 6rem 0;
+    color: #fff;
+    text-align: center;
+    background: #000;
+    overflow: hidden;
+}
+.team-hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("{% static 'images/team-hero.png' %}") center/cover no-repeat;
+    filter: blur(12px) brightness(0.55);
+    z-index: 0;
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+.page-subtitle {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+/* Layout */
+.our-team-section, .team-support-section {
+    padding: 4rem 0;
+}
+.team-grid, .supporters-grid {
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Card base */
+.team-member-card, .supporter-card {
+    background: #fff;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    padding: 1.75rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s ease;
+    box-shadow: 0 10px 28px rgba(136,36,199,0.07);
+}
+.team-member-card:hover, .supporter-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(136,36,199,0.15);
+}
+
+/* Image */
+.team-img, .supporter-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #f0f0f5;
+    box-shadow: 0 12px 30px rgba(136,36,199,0.08);
+    margin-bottom: 12px;
+}
+
+/* Text */
+.team-name, .supporter-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 4px 0;
+    color: #222;
+}
+.team-role, .supporter-role {
+    font-size: .9rem;
+    color: #6e6e85;
+    margin-bottom: 12px;
+}
+.team-bio {
+    font-size: .95rem;
+    color: #4d4d5c;
+    flex: 1;
+    margin-bottom: 12px;
+}
+
+/* Social icons */
+.team-social {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 8px 0 10px;
+}
+.social-link {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    background: #f3eaff;
+    color: #8824C7;
+    transition: all .25s ease;
+    box-shadow: 0 6px 18px rgba(136,36,199,0.06);
+}
+.social-link:hover {
+    background: linear-gradient(135deg, #8824C7, #d18aff);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Read Bio button */
+.read-bio-btn {
+    margin-top: .5rem;
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: .9rem;
+    transition: all .25s ease;
+}
+.read-bio-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(136,36,199,0.2);
+}
+
+/* BIO OVERLAY */
+.bio-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10000;
+    font-family: var(--font-family);
+}
+.bio-overlay.active {
+    display: flex;
+}
+.bio-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(2px);
+}
+.bio-panel {
+    position: relative;
+    background: #fff;
+    max-width: 980px;
+    width: 100%;
+    border-radius: 16px 16px 8px 8px;
+    margin: 0 1rem 1rem;
+    padding: 32px 28px;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.2);
+    display: flex;
+    gap: 40px;
+    overflow: hidden;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all .4s cubic-bezier(.22,.61,.36,1);
+}
+.bio-overlay.active .bio-panel {
+    transform: translateY(0);
+    opacity: 1;
+}
+.bio-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    color: #555;
+    padding: 4px 8px;
+    transition: color .2s;
+}
+.bio-close:hover {
+    color: #000;
+}
+.bio-content {
+    display: flex;
+    flex: 1;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.bio-image-wrapper {
+    flex: 0 0 220px;
+    position: relative;
+}
+.bio-image-wrapper img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 25px 60px rgba(136,36,199,0.15);
+}
+.bio-text {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.bio-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+}
+.bio-role {
+    font-size: 1rem;
+    color: #6e6e85;
+    margin: 0;
+}
+.bio-description {
+    margin-top: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444;
+}
+.bio-social {
+    display: flex;
+    gap: 12px;
+    margin: 6px 0 4px;
+}
+.bio-social .social-link {
+    width: 38px;
+    height: 38px;
+    font-size: 1.15rem;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .bio-panel {
+        flex-direction: column;
+        padding: 24px 20px;
+    }
+    .bio-image-wrapper {
+        width: 100%;
+        flex: none;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Accessibility: trap focus inside overlay when active
+let lastFocused = null;
+const overlay = document.getElementById('bio-overlay');
+const panel = overlay.querySelector('.bio-panel');
+const closeBtn = overlay.querySelector('.bio-close');
+
+function openBio(dataElem) {
+    // Save last focused for return
+    lastFocused = document.activeElement;
+
+    const name = dataElem.dataset.name;
+    const role = dataElem.dataset.role;
+    const bio = dataElem.dataset.bio;
+    const imageSrc = dataElem.dataset.image;
+
+    // Populate
+    overlay.querySelector('.bio-name').textContent = name;
+    overlay.querySelector('.bio-role').textContent = role;
+    overlay.querySelector('.bio-description').textContent = bio;
+    overlay.querySelector('.bio-image').src = imageSrc;
+    overlay.querySelector('.bio-image').alt = `${name} photo`;
+
+    // Social links
+    const socialContainer = overlay.querySelector('.bio-social');
+    socialContainer.innerHTML = '';
+    if (dataElem.dataset.twitter) {
+        socialContainer.innerHTML += `<a href="${dataElem.dataset.twitter}" class="social-link" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>`;
+    }
+    if (dataElem.dataset.instagram) {
+        socialContainer.innerHTML += `<a href="${dataElem.dataset.instagram}" class="social-link" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>`;
+    }
+    if (dataElem.dataset.facebook) {
+        socialContainer.innerHTML += `<a href="${dataElem.dataset.facebook}" class="social-link" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>`;
+    }
+    if (dataElem.dataset.linkedin) {
+        socialContainer.innerHTML += `<a href="${dataElem.dataset.linkedin}" class="social-link" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>`;
+    }
+
+    // Show overlay
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    closeBtn.focus();
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBio() {
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Read bio buttons
+    document.querySelectorAll('.read-bio-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const bioId = btn.dataset.bioId;
+            const dataElem = document.getElementById(bioId);
+            if (dataElem) openBio(dataElem);
+        });
+    });
+
+    // Close overlay
+    closeBtn.addEventListener('click', closeBio);
+    overlay.querySelector('.bio-backdrop').addEventListener('click', closeBio);
+
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeBio();
+        }
+    });
+
+    // Focus trap rudimentary
+    overlay.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            const focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const first = focusable[0];
+            const last = focusable[focusable.length -1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

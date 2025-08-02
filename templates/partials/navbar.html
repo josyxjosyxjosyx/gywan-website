@@ -1,0 +1,423 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GYWAN Navbar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #8824C7;
+      --accent: #FFDE2F;
+      --white: #fff;
+      --black: #111;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding-top: 90px;
+    }
+
+    .top-bar {
+      background: var(--accent);
+      color: var(--white);
+      padding: 6px 20px;
+      font-size: 0.9rem;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .top-bar span {
+      margin-right: 15px;
+    }
+
+    nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: fixed;
+      top: 36px;  
+      left: 0;
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      z-index: 998;
+      transition: none;
+    }
+
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo img {
+      height: 48px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--primary);
+      transition: transform 0.3s ease;
+    }
+
+    .menu-toggle.active {
+      transform: rotate(90deg);
+    }
+
+    ul.menu {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    ul.menu li {
+      position: relative;
+    }
+
+    ul.menu a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 24px;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+    }
+
+    ul.menu a::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 6px;
+      height: 2px;
+      background: linear-gradient(90deg, #8824C7 0%, #FFDE2F 100%);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+      z-index: 1;
+    }
+
+    ul.menu a:hover::after, ul.menu a:focus::after {
+      transform: scaleX(1);
+    }
+
+    ul.menu a:hover, ul.menu a:focus {
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(136,36,199,0.08);
+      outline: none;
+    }
+
+    ul.menu a:active {
+      color: #8824C7;
+    }
+
+    ul.menu li.has-dropdown > a {
+      padding-right: 32px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    ul.menu li.has-dropdown > a::after {
+      content: none;
+    }
+
+    .dropdown-arrow {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-left: 4px;
+      background: url('data:image/svg+xml;utf8,<svg fill="%238824C7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.17l3.71-2.94a.75.75 0 1 1 .94 1.16l-4.25 3.37a.75.75 0 0 1-.94 0l-4.25-3.37a.75.75 0 0 1 .02-1.06z"/></svg>') no-repeat center center;
+      background-size: 1em 1em;
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    ul.menu li.has-dropdown:hover > a .dropdown-arrow,
+    ul.menu li.has-dropdown:focus-within > a .dropdown-arrow,
+    ul.menu li.active > a .dropdown-arrow {
+      transform: rotate(360deg);
+      background: url('data:image/svg+xml;utf8,<svg fill="%238824C7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.23 12.79a.75.75 0 0 0 1.06-.02L10 9.83l3.71 2.94a.75.75 0 1 0 .94-1.16l-4.25-3.37a.75.75 0 0 0-.94 0l-4.25 3.37a.75.75 0 0 0 .02 1.06z"/></svg>') no-repeat center center;
+      background-size: 1em 1em;
+    }
+
+    .dropdown {
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(136,36,199,0.08);
+      border: 1px solid #f3eaff;
+      padding: 8px 0;
+      min-width: 200px;
+      background: #fff;
+      margin-top: 0px;
+      transition: box-shadow 0.3s;
+      top: calc(100% + 2px);
+    }
+
+    .dropdown a {
+      padding: 10px 24px;
+      color: #7C1BB2;
+      font-size: 0.98rem;
+      border-radius: 12px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown a:hover, .dropdown a:focus {
+      color: #111;
+      outline: none;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--white);
+      border: 1px solid #eee;
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .dropdown a {
+      padding: 10px 15px;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .dropdown a:hover {
+      color: var(--black);
+    }
+
+    li:hover .dropdown, li:focus-within .dropdown {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .donate-btn a {
+      background: linear-gradient(to right, #8824C7, #BA4BFF);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 12px rgba(136, 36, 199, 0.3);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .donate-btn a:hover {
+      background: linear-gradient(to right, #A13AFF, #7C1BB2);
+      box-shadow: 0 6px 20px rgba(136, 36, 199, 0.4);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      ul.menu {
+        flex-direction: column;
+        align-items: flex-start;
+        background: var(--white);
+        width: 100%;
+        padding: 10px 20px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: none;
+        transition: all 0.3s ease-in-out;
+      }
+
+      ul.menu.show {
+        display: flex;
+      }
+
+      ul.menu li {
+        width: 100%;
+      }
+
+      .dropdown {
+        position: static;
+        border: none;
+        box-shadow: none;
+        display: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        margin-left: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 5px;
+      }
+
+      li.active .dropdown {
+        display: flex !important;
+      }
+
+      .dropdown-toggle {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .dropdown-toggle::after {
+        content: " ▼";
+        font-size: 0.75rem;
+        float: right;
+        transition: transform 0.3s ease;
+      }
+
+      .dropdown-toggle.active::after {
+        transform: rotate(180deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Info Bar -->
+<div class="top-bar">
+  <div>
+    <span><i class="fas fa-phone"></i> +232 77491399</span>
+    <span><i class="fas fa-envelope"></i> info@gywan.org</span>
+  </div>
+  <div><span><i class="fas fa-info-circle">Support us to make a difference!</i></span></div>
+</div>
+
+<!-- Navbar -->
+<nav id="mainNavbar">
+  <div class="navbar-container">
+    <div class="logo">
+      <a href="{% url 'home' %}"><img src="{% static 'images/gywan-logo.png' %}" alt="GYWAN Logo" /></a>
+    </div>
+
+    <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+
+    <ul class="menu" id="menu">
+      <li class="has-dropdown">
+        <a href="#" class="dropdown-toggle">Who We Are <span class="dropdown-arrow"></span></a>
+        <div class="dropdown">
+          <a href="{% url 'about' %}">About Us</a>
+          <a href="{% url 'our_team' %}">Our Team</a>
+          <a href="{% url 'blog' %}">Blog and News</a>
+        </div>
+      </li>
+
+      <li class="has-dropdown">
+        <a href="#" class="dropdown-toggle">Programs <span class="dropdown-arrow"></span></a>
+        <div class="dropdown">
+          <a href="{% url 'stories' %}">Success Stories</a>
+          <a href="{% url 'events' %}">Events</a>
+          <a href="{% url 'resources' %}">Resources</a>
+        </div>
+      </li>
+
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+
+      <li class="donate-btn">
+        <a href="{% url 'donate' %}"><i class="fas fa-heart"></i> Donate</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Script -->
+<script>
+  const toggle = document.getElementById("menuToggle");
+  const menu = document.getElementById("menu");
+  const icon = toggle.querySelector("i");
+  let lastScroll = 0;
+
+  toggle.addEventListener("click", () => {
+    menu.classList.toggle("show");
+    icon.classList.toggle("fa-bars");
+    icon.classList.toggle("fa-times");
+    toggle.classList.toggle("active");
+  });
+
+  // Handle dropdown functionality for mobile
+  const dropdownToggles = document.querySelectorAll(".dropdown-toggle");
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener("click", function(e) {
+      if (window.innerWidth <= 768) {
+        // Only prevent default if it's a dropdown trigger (not a direct link)
+        if (this.getAttribute('href') === '#' || this.nextElementSibling) {
+          e.preventDefault();
+        }
+        
+        const parent = this.closest('.has-dropdown');
+        const isActive = parent.classList.contains('active');
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.has-dropdown.active').forEach(item => {
+          if (item !== parent) {
+            item.classList.remove('active');
+            const otherToggle = item.querySelector('.dropdown-toggle');
+            if (otherToggle) otherToggle.classList.remove('active');
+          }
+        });
+        
+        // Toggle current dropdown
+        parent.classList.toggle('active');
+        this.classList.toggle('active');
+      }
+    });
+  });
+
+  // Close dropdowns when clicking outside on mobile
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768) {
+      if (!e.target.closest('.has-dropdown')) {
+        document.querySelectorAll('.has-dropdown.active').forEach(item => {
+          item.classList.remove('active');
+          const toggle = item.querySelector('.dropdown-toggle');
+          if (toggle) toggle.classList.remove('active');
+        });
+      }
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    const nav = document.getElementById("mainNavbar");
+    const currentScroll = window.pageYOffset;
+    // Remove scroll-based hide/show for navbar, keep it fixed below top bar
+  });
+</script>
+
+</body>
+</html>

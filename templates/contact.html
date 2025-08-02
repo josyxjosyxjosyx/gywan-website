@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact GYWAN - Get in Touch{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" data-aos="fade-up">
+    <div class="container">
+        <h1 class="page-title fade-in">Contact us</h1>
+        <p class="page-subtitle fade-in">Have a question? We may not be able to respond to all messages, but we'll do our best to help.</p>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="contact-section" data-aos="fade-up">
+    <div class="container">
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <div class="contact-form-wrapper">
+                <form method="post" class="contact-form" id="contact-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_name">Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="error-message">{{ form.name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="error-message">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_country">Country</label>
+                        <select name="country" id="id_country" class="form-control">
+                            <option value="">Select your country</option>
+                            <option value="kenya">Sierra Leone</option>
+                            <option value="ghana">Ghana</option>
+                            <option value="nigeria">Nigeria</option>
+                            <option value="kenya">Kenya</option>
+                            <option value="south-africa">South Africa</option>
+                            <option value="ethiopia">Ethiopia</option>
+                            <option value="tanzania">Tanzania</option>
+                            <option value="uganda">Uganda</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_subject">Subject</label>
+                        <select name="subject" id="id_subject" class="form-control">
+                            <option value="">Select a subject</option>
+                            <option value="general">General enquiry</option>
+                            <option value="media">Media</option>
+                            <option value="donations">Donations</option>
+                            <option value="resources">Resources</option>
+                            <option value="partnership">Partnership</option>
+                            <option value="volunteer">Sharing A Story</option>
+                        </select>
+                        {% if form.subject.errors %}
+                            <div class="error-message">{{ form.subject.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_message">Message</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <div class="error-message">{{ form.message.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="privacy" required>
+                            <span class="checkmark"></span>
+                            I agree to be contacted by GYWAN in response to my enquiry. I understand that my data will be kept responsibly in line with GYWAN's Privacy Policy.
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-large">
+                        Submit
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <div class="contact-location">
+                    <h3>Mile 91, Sierra Leone</h3>
+                    <p>1 Sillicon Hills<br>
+                    Tonkolili District<br>
+                    Sierra Leone</p>
+                    </div>
+                
+                    <div class="contact-details">
+                    <div class="contact-item">
+                        <h4>Email</h4>
+                        <p>info@gywan.org</p>
+                        <p>partnerships@gywan.org</p>
+                </div>
+                
+                <div class="contact-item">
+                        <h4>Phone</h4>
+                        <p>+232 77491399</p>
+                </div>
+                
+                <div class="contact-item">
+                        <h4>Office Hours</h4>
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM GMT</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section" data-aos="fade-up">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title fade-in">Common queries</h2>
+            <p class="section-subtitle fade-in">Quick answers to frequently asked questions</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item fade-in">
+                <div class="faq-question">
+                    <h3>How can I get involved with GYWAN?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>There are many ways to get involved! You can volunteer, donate, partner with us, or spread awareness about our mission. Contact us to discuss how your skills and interests can contribute to our work.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item fade-in">
+                <div class="faq-question">
+                    <h3>Do you accept international volunteers?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! We welcome volunteers from around the world. We have both remote and in-person opportunities available. Please reach out to discuss your availability and interests.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item fade-in">
+                <div class="faq-question">
+                    <h3>How do you use donations?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Your donations directly fund our programs including leadership workshops, mentorship programs, advocacy initiatives, and community outreach. We maintain transparency and provide regular updates on how funds are used.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item fade-in">
+                <div class="faq-question">
+                    <h3>Can organizations partner with GYWAN?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We're always looking for strategic partnerships with organizations that share our mission. We work with NGOs, corporations, educational institutions, and government agencies.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item fade-in">
+                <div class="faq-question">
+                    <h3>How can I stay updated on GYWAN's work?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Subscribe to our newsletter, follow us on social media, and check our blog for regular updates on our programs, impact stories, and upcoming events.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ Toggle Functionality
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const faqItem = question.parentElement;
+        const answer = faqItem.querySelector('.faq-answer');
+        const icon = question.querySelector('i');
+        
+        // Toggle active class
+        faqItem.classList.toggle('active');
+        
+        // Toggle icon
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
+        
+        // Toggle answer visibility
+        if (faqItem.classList.contains('active')) {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+        } else {
+            answer.style.maxHeight = '0';
+        }
+    });
+});
+
+// Form validation
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    const name = document.getElementById('id_name').value.trim();
+    const email = document.getElementById('id_email').value.trim();
+    const subject = document.getElementById('id_subject').value.trim();
+    const message = document.getElementById('id_message').value.trim();
+    const privacy = document.querySelector('input[name="privacy"]').checked;
+    
+    if (!name || !email || !subject || !message || !privacy) {
+        e.preventDefault();
+        alert('Please fill in all required fields and accept the privacy policy.');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = 'Sending...';
+    submitBtn.disabled = true;
+});
+</script>
+{% endblock %}

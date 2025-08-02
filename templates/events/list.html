@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Events - GYWAN{% endblock %}
+
+{% block content %}
+<section class="news-section" style="background:#f8f9fa; padding:60px 0;">
+  <h1 class="section-title" style="margin-bottom:32px;">Events</h1>
+  <div class="container news-grid-wrap">
+    <aside class="news-sidebar">
+      <form method="get" action="" class="sidebar-search" style="margin-bottom:24px;">
+        <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search events..." class="sidebar-search-input">
+        <button type="submit" class="sidebar-search-btn"><i class="fas fa-search"></i></button>
+      </form>
+      <div class="sidebar-block">
+        <h4 class="sidebar-title">Latest Events</h4>
+        <ul class="sidebar-list">
+          {% for latest in events|slice:":5" %}
+            <li><a href="{{ latest.get_absolute_url }}">{{ latest.title|truncatewords:6 }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="sidebar-block">
+        <h4 class="sidebar-title">Useful Links</h4>
+        <ul class="sidebar-list">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'stories' %}">Stories</a></li>
+          <li><a href="{% url 'resources' %}">Resources</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </div>
+    </aside>
+    <div class="news-main">
+      <div class="news-grid">
+        {% for event in events %}
+        <div class="news-card" data-aos="fade-up">
+          <div class="news-img-wrap">
+            {% if event.image %}
+              <img src="{{ event.image.url }}" alt="{{ event.title }}" class="news-img">
+            {% else %}
+              <img src="{% static 'images/placeholder.jpg' %}" alt="{{ event.title }}" class="news-img">
+            {% endif %}
+          </div>
+          <div class="news-content">
+            <h3 class="news-title">{{ event.title }}</h3>
+            <div class="news-meta">
+              <span><i class="fas fa-calendar"></i> {{ event.date|date:"M d, Y" }}</span>
+              {% if event.location %}<span><i class="fas fa-map-marker-alt"></i> {{ event.location }}</span>{% endif %}
+              {% if event.category %}<span><i class="fas fa-tag"></i> {{ event.category }}</span>{% endif %}
+            </div>
+            <p class="news-excerpt">{{ event.description|truncatewords:30 }}</p>
+            <a href="{{ event.get_absolute_url }}" class="news-btn">Details</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% if is_paginated %}
+      <div class="news-pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page=1" class="page-link">First</a>
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+        {% endif %}
+        <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<!-- Comments Section -->
+<section class="comments-section" style="margin-top:64px;">
+  <h2 class="comments-title">Comments</h2>
+  <form method="post" action="" class="comments-form" style="margin-bottom:32px;">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Your Name" required class="comments-input">
+    <input type="email" name="email" placeholder="Your Email" required class="comments-input">
+    <textarea name="comment" rows="3" placeholder="Write your comment..." required class="comments-input"></textarea>
+    <button type="submit" class="comments-btn">Submit</button>
+  </form>
+  <div class="comments-list">
+    <h4 class="comments-subtitle">Recent Comments</h4>
+    <ul>
+      {% for comment in recent_comments %}
+        <li class="comment-item">
+          <span class="comment-text">{{ comment.text }}</span>
+          <span class="comment-meta">by {{ comment.name }} ({{ comment.email }})</span>
+          <span class="comment-date">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+        </li>
+      {% empty %}
+        <li>No comments yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Use same CSS as stories/list.html for consistency */
+.news-grid-wrap {
+  display: flex;
+  gap: 48px;
+}
+.news-main {
+  flex: 3;
+}
+.news-sidebar {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(136,36,199,0.08);
+  padding: 32px 24px;
+  min-width: 260px;
+  max-width: 320px;
+  margin-top: 32px;
+  height: fit-content;
+}
+.sidebar-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.sidebar-search-input {
+  flex: 1;
+  padding: 8px 14px;
+  border: 1.5px solid #8824C7;
+  border-radius: 24px;
+  font-size: 1rem;
+  outline: none;
+}
+.sidebar-search-btn {
+  background: #8824C7;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 0 16px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-search-btn:hover {
+  background: #A13AFF;
+}
+.sidebar-block {
+  margin-bottom: 32px;
+}
+.sidebar-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #8824C7;
+  margin-bottom: 12px;
+}
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar-list li {
+  margin-bottom: 8px;
+}
+.sidebar-list a {
+  color: #7C1BB2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.sidebar-list a:hover {
+  color: #FFDE2F;
+}
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+.news-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(136,36,199,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.3s, transform 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+.news-card:hover {
+  box-shadow: 0 8px 32px rgba(136,36,199,0.18);
+  transform: translateY(-6px) scale(1.03);
+}
+.news-img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #f3eaff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.news-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.news-card:hover .news-img {
+  transform: scale(1.08) rotate(-2deg);
+}
+.news-content {
+  padding: 24px 20px 20px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.news-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #8824C7;
+  margin-bottom: 8px;
+}
+.news-meta {
+  font-size: 0.95rem;
+  color: #888;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.news-excerpt {
+  color: #444;
+  margin-bottom: 18px;
+  flex: 1;
+}
+.news-btn {
+  background: linear-gradient(90deg,#8824C7,#FFDE2F);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 12px rgba(136, 36, 199, 0.12);
+  transition: all 0.3s;
+  display: inline-block;
+  align-self: flex-start;
+  text-decoration: none;
+}
+.news-btn:hover {
+  background: linear-gradient(90deg,#A13AFF,#7C1BB2);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.page-link {
+  padding: 8px 18px;
+  background: #fff;
+  color: #8824C7;
+  border: 2px solid #8824C7;
+  border-radius: 24px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+.page-link:hover {
+  background: #8824C7;
+  color: #fff;
+}
+.page-info {
+  font-weight: 500;
+  color: #7C1BB2;
+}
+.comments-section {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(136,36,199,0.08);
+  padding: 32px 24px;
+  margin-top: 64px;
+}
+.comments-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #8824C7;
+  margin-bottom: 18px;
+}
+.comments-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.comments-input {
+  border: 1.5px solid #8824C7;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
+  resize: vertical;
+}
+.comments-btn {
+  background: #8824C7;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.comments-btn:hover {
+  background: #A13AFF;
+}
+.comments-list {
+  margin-top: 24px;
+}
+.comments-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #7C1BB2;
+  margin-bottom: 12px;
+}
+.comment-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comment-text {
+  color: #444;
+}
+.comment-date {
+  color: #888;
+  font-size: 0.9rem;
+}
+@media (max-width: 900px) {
+  .news-grid-wrap {
+    flex-direction: column;
+    gap: 0;
+  }
+  .news-sidebar {
+    margin-top: 0;
+    max-width: 100%;
+    min-width: 0;
+    padding: 24px 10px;
+  }
+}
+</style>
+{% endblock %}
