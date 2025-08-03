@@ -217,3 +217,5 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 ```python file="main/management/__init__.py"
 # Management commands package
+
+Josy
